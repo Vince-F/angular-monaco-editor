@@ -13,12 +13,16 @@
         <script src="../lib/monaco-editor/min/vs/editor/editor.main.js"></script>
         <script>if(oldRequire){ require = oldRequire; }</script>
 
-        <script src="../src/directives/angularMonacoEditor.js"></script>
+        <script src="../dist/angularMonacoEditor.min.js"></script>
 
         <script src="./simpleExample.js"></script>
     </head>
-    <body ng-app="main" ng-init="cannotModify = true">
+    <body ng-app="main" ng-init="cannotModify = false">
+        <p><a href="" ng-click="cannotModify = true">Set read only</a></p>
+        <p><a href="" ng-click="cannotModify = false">Remove read only</a></p>
+        <p>is read only: {{cannotModify}}</p>
         Your code is {{myCode}}
-        <angular-monaco-editor ng-model="myCode" ng-readonly="true" template-start="class MyObject{" ></angular-monaco-editor>
+        <angular-monaco-editor ng-model="myCode" ng-readonly="cannotModify" template-start="class MyObject{" 
+            editor-height="400px" editor-width="100%"></angular-monaco-editor>
     </body>
 </html>

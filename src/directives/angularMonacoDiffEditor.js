@@ -1,14 +1,10 @@
 (function(){
     angular.module("anguComp.monacoEditor")
-        .directive("angularMonacoEditor",angularMonacoEditor);
+        .directive("angularMonacoDiffEditor",angularMonacoDiffEditor);
 
-    angularMonacoEditor.$inject = ["$parse"];
+    angularMonacoDiffEditor.$inject = ["$parse"];
 
-    /**
-     * @ngdoc directive
-     * @name anguComp.monacoEditor.directive:angularMonacoEditor
-     */
-    function angularMonacoEditor($parse) {
+    function angularMonacoDiffEditor($parse) {
         return {
             restrict: "EA",
             require:"ngModel",
@@ -38,21 +34,11 @@
                 var endStaticCode = "";
                 var beginStaticCodeLength = 0;
                 var endStaticCodeLength = 0;
-                var editorHeight = setEditorHeight();
-                var editorWidth = setEditorWidth();
-                var codeEditorElement = angular.element('<div class="code-container" style="height:' + editorHeight + ';width:' + editorWidth + ';"></div>');
+                var codeEditorElement = angular.element('<div class="code-container" style="height:600px;width:800px;"></div>');
                 element.append(codeEditorElement);
                 init();
 
                 /* Monaco editor initialization */
-                /**
-                 * @ngdoc method
-                 * @name initializeEditor
-                 * @methodOf anguComp.monacoEditor.directive:angularMonacoEditor
-                 * @private
-                 * @description 
-                 * create and initialize the code editor into its HTML node
-                 */
                 function initializeEditor() {
                     var options = attrs.options || {};
                     var code = "".concat(beginStaticCode, ngModelCtrl.$viewValue, endStaticCode);
@@ -66,14 +52,6 @@
                     });
                 }
 
-                /**
-                 * @ngdoc method
-                 * @name initStaticCode
-                 * @methodOf anguComp.monacoEditor.directive:angularMonacoEditor
-                 * @private
-                 * @description
-                 * set the beginning and the end of the code as defined by template
-                 */
                 function initStaticCode() {
                     if(typeof scope.templateStart === "string") {
                         beginStaticCodeLength = (scope.templateStart.match(/\n/g) || []).length + 1;
@@ -85,19 +63,11 @@
                     }
                 }
 
-                /**
-                 * @ngdoc method
-                 * @name setEditableRange
-                 * @methodOf anguComp.monacoEditor.directive:angularMonacoEditor
-                 * @private
-                 * @description
-                 * Set the template part to read only
-                 */
                 function setEditableRange() {
                     var lineStart = beginStaticCodeLength + 1;
                     var lineEnd = endStaticCodeLength;
                     var columnStart = 1;
-                    var columnEnd = 99999; //should be enough, even for minified files I think
+                    var columnEnd = 99999; //should be enough, even for minified files I thing
                     var lineCount = editor.getModel().getLineCount(); 
                     console.log("editable range is from line ",lineStart, "to ",lineCount - lineEnd, " on a total of ",lineCount,"line");
                     editor.getModel().setEditableRange(new monaco.Range(lineStart,columnStart,lineCount - lineEnd,columnEnd));
@@ -107,8 +77,8 @@
 
                 function setEditorHeight() {
                     var height = "600px"; // default
-                    if( scope.editorHeight && (scope.editorHeight.indexOf("%") === scope.editorHeight.length - 1 ||
-                        scope.editorHeight.indexOf("px") === scope.editorHeight.length - 2) ) {
+                    if(scope.editorHeight.indexOf("%") === scope.editorHeight.length - 1 ||
+                        scope.editorHeight.indexOf("px") === scope.editorHeight.length - 2) {
                         height = scope.editorHeight;
                     } // add warning message if format is incorrect
                     return height;
@@ -116,8 +86,8 @@
 
                 function setEditorWidth() {
                     var width = "800px"; // default
-                    if(scope.editorWidth && (scope.editorWidth.indexOf("%") === scope.editorWidth.length - 1 ||
-                        scope.editorWidth.indexOf("px") === scope.editorWidth.length - 2) ) {
+                    if(scope.editorWidth.indexOf("%") === scope.editorWidth.length - 1 ||
+                        scope.editorWidth.indexOf("px") === scope.editorWidth.length - 2) {
                         width = scope.editorWidth;
                     } // add warning message if format is incorrect
                     return width;
