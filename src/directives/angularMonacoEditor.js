@@ -55,15 +55,16 @@
                  */
                 function initializeEditor() {
                     var options = attrs.options || {};
-                    var code = "".concat(beginStaticCode, ngModelCtrl.$viewValue, endStaticCode);
                     
                     editor = monaco.editor.create(codeEditorElement[0], {
-                        value: code,
+                        value: "",
                         language: options.language || "javascript",
                         lineNumbers: options.lineNumbers || true,
                         readOnly: readOnly,
                         theme: options.theme || "vs-dark",
+                        automaticLayout: options.autoResize || false
                     });
+                    setEditorValue();
                 }
 
                 /**
@@ -99,7 +100,6 @@
                     var columnStart = 1;
                     var columnEnd = 99999; //should be enough, even for minified files I think
                     var lineCount = editor.getModel().getLineCount(); 
-                    console.log("editable range is from line ",lineStart, "to ",lineCount - lineEnd, " on a total of ",lineCount,"line");
                     editor.getModel().setEditableRange(new monaco.Range(lineStart,columnStart,lineCount - lineEnd,columnEnd));
                     var elems = document.querySelectorAll('[linenumber="1"]');
                     elems.forEach(function(el){ el.style.backgroundColor = "rgba(0,0,0,0.5)" } );
@@ -135,6 +135,15 @@
                         }
                         ngModelCtrl.$setViewValue(code);
                     });
+
+                    ngModelCtrl.$render = function() {
+                        setEditorValue();
+                    }
+                }
+
+                function setEditorValue() {
+                    var model = (ngModelCtrl.$viewValue === undefined)? "" : ngModelCtrl.$viewValue;
+                    editor.setValue( "".concat(beginStaticCode, model, endStaticCode));
                 }
 
                 function init() {

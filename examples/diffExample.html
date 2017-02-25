@@ -18,15 +18,9 @@
         <script src="./simpleExample.js"></script>
     </head>
     <body ng-app="main" ng-init="cannotModify = false">
-        <p><a href="" ng-click="cannotModify = true">Set read only</a></p>
-        <p><a href="" ng-click="cannotModify = false">Remove read only</a></p>
-        <p><a href="" ng-click="myCode = 'test'">Change code to "test"</a></p>
-        <p>is read only: {{cannotModify}}</p>
-        Your code is {{myCode}}
-        <angular-monaco-editor ng-model="myCode" ng-readonly="cannotModify" template-start="class MyObject{" 
-            editor-height="400px" editor-width="100%"></angular-monaco-editor>
+       
         <div ng-init="myCodeOriginal = 'this is some test';codeModified = 'this is some modified code'"></div>
-        <!--<angular-monaco-diff-editor original="myCodeOriginal" modified="codeModified" editor-height="400px" editor-width="100%"></angular-monaco-diff-editor>
-        -->
+        <angular-monaco-diff-editor original="myCodeOriginal" modified="codeModified" editor-height="400px" editor-width="100%"></angular-monaco-diff-editor>
+        
     </body>
 </html>
