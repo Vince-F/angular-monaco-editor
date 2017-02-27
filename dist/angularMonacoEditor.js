@@ -15,8 +15,6 @@
             controllerAs:"$ctrl",
             scope: {
                 options:"=",
-                templateStart:"@",
-                templateEnd:"@",
                 editorHeight:"@",
                 editorWidth:"@",
                 original:"=",
@@ -34,9 +32,9 @@
                     var options = attrs.options || {};
                     
                     editor = monaco.editor.createDiffEditor(codeEditorElement[0], {
-                       
                         lineNumbers: options.lineNumbers || true,
                         theme: options.theme || "vs-dark",
+                        automaticLayout: options.autoResize || false
                     });
 
                     editor.setModel({
@@ -104,6 +102,21 @@
                 attrs.$observe('ngDisabled',function(){
                     readOnly = $parse(attrs.ngReadonly)(scope.$parent) || $parse(attrs.ngDisabled)(scope.$parent) || false;
                 });
+
+                attrs.$observe('templateStart',function() {
+                    beginStaticCode = attrs.templateStart;
+                    initStaticCode();
+                    setEditableRange();
+                    setEditorValue();
+                });
+
+                attrs.$observe('templateEnd',function() {
+                    endStaticCode = attrs.templateEnd;
+                    initStaticCode();
+                    setEditableRange();
+                    setEditorValue();
+                });
+
                 /* retrieve code container */
                 var editor;
                 var beginStaticCode = "";
@@ -148,13 +161,13 @@
                  * set the beginning and the end of the code as defined by template
                  */
                 function initStaticCode() {
-                    if(typeof scope.templateStart === "string") {
-                        beginStaticCodeLength = (scope.templateStart.match(/\n/g) || []).length + 1;
-                        beginStaticCode = scope.templateStart + '\n';
+                    if(typeof attrs.templateStart === "string") {
+                        beginStaticCodeLength = (attrs.templateStart.match(/\n/g) || []).length + 1;
+                        beginStaticCode = attrs.templateStart + '\n';
                     }
-                    if(typeof scope.templateEnd === "string") {
-                        endStaticCodeLength = (scope.templateEnd.match(/\n/g) || []).length + 1;
-                        endStaticCode = '\n' + scope.templateEnd;
+                    if(typeof attrs.templateEnd === "string") {
+                        endStaticCodeLength = (attrs.templateEnd.match(/\n/g) || []).length + 1;
+                        endStaticCode = '\n' + attrs.templateEnd;
                     }
                 }
 
@@ -173,8 +186,6 @@
                     var columnEnd = 99999; //should be enough, even for minified files I think
                     var lineCount = editor.getModel().getLineCount(); 
                     editor.getModel().setEditableRange(new monaco.Range(lineStart,columnStart,lineCount - lineEnd,columnEnd));
-                    var elems = document.querySelectorAll('[linenumber="1"]');
-                    elems.forEach(function(el){ el.style.backgroundColor = "rgba(0,0,0,0.5)" } );
                 }
 
                 function setEditorHeight() {
@@ -216,6 +227,7 @@
                 function setEditorValue() {
                     var model = (ngModelCtrl.$viewValue === undefined)? "" : ngModelCtrl.$viewValue;
                     editor.setValue( "".concat(beginStaticCode, model, endStaticCode));
+                    setEditableRange();
                 }
 
                 function init() {
@@ -224,6 +236,10 @@
                     initializeModelUpdate();
                     setEditableRange();
                 }
+
+                scope.$watch(scope.templateStart,function(){
+                    console.log("value changed into ",scope.templateStart);
+                },true);
             }
         }
     }

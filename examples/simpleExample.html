@@ -13,7 +13,7 @@
         <script src="../lib/monaco-editor/min/vs/editor/editor.main.js"></script>
         <script>if(oldRequire){ require = oldRequire; }</script>
 
-        <script src="../dist/angularMonacoEditor.min.js"></script>
+        <script src="../dist/angularMonacoEditor.js"></script>
 
         <script src="./simpleExample.js"></script>
     </head>
@@ -21,9 +21,12 @@
         <p><a href="" ng-click="cannotModify = true">Set read only</a></p>
         <p><a href="" ng-click="cannotModify = false">Remove read only</a></p>
         <p><a href="" ng-click="myCode = 'test'">Change code to "test"</a></p>
+        <p><a href="" ng-init="preCode = 'abcde'" ng-click="preCode = 'class Test{'">Change template-start to "class Test{"</a></p>
+        <p><a href="" ng-init="postCode = 'end'" ng-click="postCode = '}'">Change template-end to "}"</a></p>
         <p>is read only: {{cannotModify}}</p>
         Your code is {{myCode}}
-        <angular-monaco-editor ng-model="myCode" ng-readonly="cannotModify" template-start="class MyObject{" 
+        preCode is {{preCode}}
+        <angular-monaco-editor ng-model="myCode" ng-readonly="cannotModify" template-start="{{preCode}}" template-end="{{postCode}}" 
             editor-height="400px" editor-width="100%"></angular-monaco-editor>
         <div ng-init="myCodeOriginal = 'this is some test';codeModified = 'this is some modified code'"></div>
         <!--<angular-monaco-diff-editor original="myCodeOriginal" modified="codeModified" editor-height="400px" editor-width="100%"></angular-monaco-diff-editor>
