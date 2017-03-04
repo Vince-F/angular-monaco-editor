@@ -16,7 +16,7 @@
             controller:function(){},
             controllerAs:"$ctrl",
             scope: {
-                options:"=",
+                options:"=?",
                 templateStart:"@",
                 templateEnd:"@",
                 editorHeight:"@",
@@ -25,12 +25,14 @@
             link:function(scope,element,attrs,ngModelCtrl) {
                 var readOnly = $parse(attrs.ngReadonly)(scope.$parent) || $parse(attrs.ngDisabled)(scope.$parent) || false;
 
-                attrs.$observe('ngReadonly',function() {
+                attrs.$observe('readonly',function() {
                     readOnly = $parse(attrs.ngReadonly)(scope.$parent) || $parse(attrs.ngDisabled)(scope.$parent) || false;
+                    updateReadOnly(readOnly);
                 });
 
-                attrs.$observe('ngDisabled',function(){
+                attrs.$observe('disabled',function(){
                     readOnly = $parse(attrs.ngReadonly)(scope.$parent) || $parse(attrs.ngDisabled)(scope.$parent) || false;
+                    updateReadOnly(readOnly);
                 });
 
                 attrs.$observe('templateStart',function() {
@@ -69,7 +71,8 @@
                  * create and initialize the code editor into its HTML node
                  */
                 function initializeEditor() {
-                    var options = attrs.options || {};
+                    var options = scope.options || {};
+                    console.log(attrs.options,scope.options);
                     
                     editor = monaco.editor.create(codeEditorElement[0], {
                         value: "",
@@ -79,6 +82,7 @@
                         theme: options.theme || "vs-dark",
                         automaticLayout: options.autoResize || false
                     });
+                    console.log(editor.getActions());
                     setEditorValue();
                 }
 
@@ -150,8 +154,13 @@
                     });
 
                     ngModelCtrl.$render = function() {
+                        // formatDocument(); // re indent code
                         setEditorValue();
                     }
+                }
+
+                function formatDocument() {
+                    editor.trigger("angularDirective","editor.action.formatDocument");
                 }
 
                 function setEditorValue() {
@@ -167,8 +176,25 @@
                     setEditableRange();
                 }
 
-                scope.$watch(scope.templateStart,function(){
-                    console.log("value changed into ",scope.templateStart);
+                function updateOptions(newOptions) {
+                    var options = newOptions || {};
+                    editor.updateOptions({
+                        language: options.language || "javascript",
+                        lineNumbers: options.lineNumbers || true,
+                        readOnly: readOnly,
+                        theme: options.theme || "vs-dark",
+                        automaticLayout: options.autoResize || false
+                    });
+                }
+
+                function updateReadOnly(readOnly) {
+                    editor.updateOptions({
+                        readOnly: readOnly
+                    });
+                }
+
+                scope.$watchCollection('options',function(){
+                    updateOptions(scope.options);
                 },true);
             }
         }
