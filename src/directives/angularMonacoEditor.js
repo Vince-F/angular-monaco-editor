@@ -72,7 +72,6 @@
                  */
                 function initializeEditor() {
                     var options = scope.options || {};
-                    console.log(attrs.options,scope.options);
                     
                     editor = monaco.editor.create(codeEditorElement[0], {
                         value: "",

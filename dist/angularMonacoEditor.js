@@ -142,7 +142,6 @@
                  */
                 function initializeEditor() {
                     var options = scope.options || {};
-                    console.log(attrs.options,scope.options);
                     
                     editor = monaco.editor.create(codeEditorElement[0], {
                         value: "",
@@ -224,9 +223,7 @@
                     });
 
                     ngModelCtrl.$render = function() {
-                        console.log("update model");
-                        // re indent code if option is true
-                        formatDocument();
+                        // formatDocument(); // re indent code
                         setEditorValue();
                     }
                 }
@@ -260,15 +257,12 @@
                 }
 
                 function updateReadOnly(readOnly) {
-                    console.log("set readonly to ",readOnly)
                     editor.updateOptions({
                         readOnly: readOnly
                     });
                 }
 
                 scope.$watchCollection('options',function(){
-                    console.log("value changed into ",scope.options);
-                    ;
                     updateOptions(scope.options);
                 },true);
             }
