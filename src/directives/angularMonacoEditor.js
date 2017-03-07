@@ -146,7 +146,7 @@
                         if(beginStaticCodeLength > 0 || endStaticCodeLength > 0 ) {
                             var linesOfCode = code.split("\n");
                             linesOfCode.splice(0,beginStaticCodeLength);
-                            linesOfCode.splice(-1,endStaticCodeLength);
+                            linesOfCode.splice(-endStaticCodeLength,endStaticCodeLength);
                             code = linesOfCode.join("\n");
                         }
                         ngModelCtrl.$setViewValue(code);
