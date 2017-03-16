@@ -79,9 +79,9 @@
                         lineNumbers: options.lineNumbers || true,
                         readOnly: readOnly,
                         theme: options.theme || "vs-dark",
-                        automaticLayout: options.autoResize || false
+                        automaticLayout: options.autoResize || false,
+                        scrollBeyondLastLine: (options.scrollBeyondLastLine === false)?false:true
                     });
-                    console.log(editor.getActions());
                     setEditorValue();
                 }
 
@@ -184,7 +184,8 @@
                         lineNumbers: options.lineNumbers || true,
                         readOnly: readOnly,
                         theme: options.theme || "vs-dark",
-                        automaticLayout: options.autoResize || false
+                        automaticLayout: options.autoResize || false,
+                        scrollBeyondLastLine: (options.scrollBeyondLastLine === false)?false:true
                     });
                 }
 
