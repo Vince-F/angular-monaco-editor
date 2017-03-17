@@ -219,7 +219,7 @@
                             linesOfCode.splice(-endStaticCodeLength,endStaticCodeLength);
                             code = linesOfCode.join("\n");
                         }
-                        if(ngModelCtrl.$viewValue !== code) { //update only on change to avoid ngChange to be triggered when templateStart or templateEnd change
+                        if(ngModelCtrl.$viewValue !== code && !(!ngModelCtrl.$viewValue && code.length === 0)) { //update only on change to avoid ngChange to be triggered when templateStart or templateEnd change
                             ngModelCtrl.$setViewValue(code);
                         }
                     });
